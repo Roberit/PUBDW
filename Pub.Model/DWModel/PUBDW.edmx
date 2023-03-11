@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PUBDW.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="PUBDWStoreContainer">
+    <EntitySet Name="DimStores" EntityType="PUBDW.Store.DimStores" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DimTitles" EntityType="PUBDW.Store.DimTitles" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DimDates" EntityType="PUBDW.Store.DimDates" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="FactSale" EntityType="PUBDW.Store.FactSale" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="DimDateDimTitle" Association="PUBDW.Store.DimDateDimTitle">
+      <End Role="DimDate" EntitySet="DimDates" />
+      <End Role="DimTitle" EntitySet="DimTitles" />
+    </AssociationSet>
+    <AssociationSet Name="DimDateFactSales" Association="PUBDW.Store.DimDateFactSales">
+      <End Role="DimDate" EntitySet="DimDates" />
+      <End Role="FactSales" EntitySet="FactSale" />
+    </AssociationSet>
+    <AssociationSet Name="DimTitleFactSales" Association="PUBDW.Store.DimTitleFactSales">
+      <End Role="DimTitle" EntitySet="DimTitles" />
+      <End Role="FactSales" EntitySet="FactSale" />
+    </AssociationSet>
+    <AssociationSet Name="DimStoreFactSales" Association="PUBDW.Store.DimStoreFactSales">
+      <End Role="DimStore" EntitySet="DimStores" />
+      <End Role="FactSales" EntitySet="FactSale" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="DimStores">
+    <Key>
+      <PropertyRef Name="StoreKey" />
+    </Key>
+    <Property Name="StoreKey" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StoreId" Type="nvarchar" Nullable="false" MaxLength="4" />
+    <Property Name="StoreName" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="DimTitles">
+    <Key>
+      <PropertyRef Name="TitleKey" />
+    </Key>
+    <Property Name="TitleKey" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TitleId" Type="nvarchar" Nullable="false" MaxLength="6" />
+    <Property Name="TitleName" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="TitleType" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="PublisherKey" Type="int" Nullable="false" />
+    <Property Name="TitlePrice" Type="decimal" Nullable="false" Precision="18" Scale="4" />
+    <Property Name="PublishedDateKey" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DimDates">
+    <Key>
+      <PropertyRef Name="DateKey" />
+    </Key>
+    <Property Name="DateKey" Type="int" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="DateName" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Month" Type="smallint" Nullable="false" />
+    <Property Name="MonthName" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Quarter" Type="smallint" Nullable="false" />
+    <Property Name="QuarterName" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Year" Type="smallint" Nullable="false" />
+    <Property Name="YearName" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="FactSale">
+    <Key>
+      <PropertyRef Name="OrderNumber" />
+    </Key>
+    <Property Name="OrderNumber" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="OrderDateKey" Type="int" Nullable="false" />
+    <Property Name="TitleKey" Type="int" Nullable="false" />
+    <Property Name="StoreKey" Type="int" Nullable="false" />
+    <Property Name="SalesQuantity" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="DimDateDimTitle">
+    <End Role="DimDate" Type="PUBDW.Store.DimDates" Multiplicity="1" />
+    <End Role="DimTitle" Type="PUBDW.Store.DimTitles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimDate">
+        <PropertyRef Name="DateKey" />
+      </Principal>
+      <Dependent Role="DimTitle">
+        <PropertyRef Name="PublishedDateKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DimDateFactSales">
+    <End Role="DimDate" Type="PUBDW.Store.DimDates" Multiplicity="1" />
+    <End Role="FactSales" Type="PUBDW.Store.FactSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimDate">
+        <PropertyRef Name="DateKey" />
+      </Principal>
+      <Dependent Role="FactSales">
+        <PropertyRef Name="OrderDateKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DimTitleFactSales">
+    <End Role="DimTitle" Type="PUBDW.Store.DimTitles" Multiplicity="1" />
+    <End Role="FactSales" Type="PUBDW.Store.FactSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimTitle">
+        <PropertyRef Name="TitleKey" />
+      </Principal>
+      <Dependent Role="FactSales">
+        <PropertyRef Name="TitleKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DimStoreFactSales">
+    <End Role="DimStore" Type="PUBDW.Store.DimStores" Multiplicity="1" />
+    <End Role="FactSales" Type="PUBDW.Store.FactSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DimStore">
+        <PropertyRef Name="StoreKey" />
+      </Principal>
+      <Dependent Role="FactSales">
+        <PropertyRef Name="StoreKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="PUBDW" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="PUBDWContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DimStores" EntityType="PUBDW.DimStore" />
+          <EntitySet Name="DimTitles" EntityType="PUBDW.DimTitle" />
+          <EntitySet Name="DimDates" EntityType="PUBDW.DimDate" />
+          <AssociationSet Name="DimDateDimTitle" Association="PUBDW.DimDateDimTitle">
+            <End Role="DimDate" EntitySet="DimDates" />
+            <End Role="DimTitle" EntitySet="DimTitles" />
+          </AssociationSet>
+          <EntitySet Name="FactSale" EntityType="PUBDW.FactSales" />
+          <AssociationSet Name="DimDateFactSales" Association="PUBDW.DimDateFactSales">
+            <End Role="DimDate" EntitySet="DimDates" />
+            <End Role="FactSales" EntitySet="FactSale" />
+          </AssociationSet>
+          <AssociationSet Name="DimTitleFactSales" Association="PUBDW.DimTitleFactSales">
+            <End Role="DimTitle" EntitySet="DimTitles" />
+            <End Role="FactSales" EntitySet="FactSale" />
+          </AssociationSet>
+          <AssociationSet Name="DimStoreFactSales" Association="PUBDW.DimStoreFactSales">
+            <End Role="DimStore" EntitySet="DimStores" />
+            <End Role="FactSales" EntitySet="FactSale" />
+          </AssociationSet>
+          <EntitySet Name="DimPublishers" EntityType="PUBDW.DimPublisher" />
+          <EntitySet Name="DimAuthors" EntityType="PUBDW.DimAuthor" />
+          <EntitySet Name="FactTitlesAuthors" EntityType="PUBDW.FactTitlesAuthor" />
+          <AssociationSet Name="DimPublisherDimTitle" Association="PUBDW.DimPublisherDimTitle">
+            <End Role="DimPublisher" EntitySet="DimPublishers" />
+            <End Role="DimTitle" EntitySet="DimTitles" />
+          </AssociationSet>
+          <AssociationSet Name="DimTitleFactTitlesAuthor" Association="PUBDW.DimTitleFactTitlesAuthor">
+            <End Role="DimTitle" EntitySet="DimTitles" />
+            <End Role="FactTitlesAuthor" EntitySet="FactTitlesAuthors" />
+          </AssociationSet>
+          <AssociationSet Name="DimAuthorFactTitlesAuthor" Association="PUBDW.DimAuthorFactTitlesAuthor">
+            <End Role="DimAuthor" EntitySet="DimAuthors" />
+            <End Role="FactTitlesAuthor" EntitySet="FactTitlesAuthors" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="DimStore">
+          <Key>
+            <PropertyRef Name="StoreKey" />
+          </Key>
+          <Property Name="StoreKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StoreId" Type="String" Nullable="false" Unicode="true" MaxLength="4" />
+          <Property Name="StoreName" Type="String" Nullable="false" Unicode="true" MaxLength="50" />
+          <NavigationProperty Name="FactSales" Relationship="PUBDW.DimStoreFactSales" FromRole="DimStore" ToRole="FactSales" />
+        </EntityType>
+        <EntityType Name="DimTitle">
+          <Key>
+            <PropertyRef Name="TitleKey" />
+          </Key>
+          <Property Name="TitleKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TitleId" Type="String" Nullable="false" MaxLength="6" Unicode="true" />
+          <Property Name="TitleName" Type="String" Nullable="false" MaxLength="100" Unicode="true" />
+          <Property Name="TitleType" Type="String" Nullable="false" MaxLength="50" Unicode="true" />
+          <Property Name="TitlePrice" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <NavigationProperty Name="DimDate" Relationship="PUBDW.DimDateDimTitle" FromRole="DimTitle" ToRole="DimDate" />
+          <Property Name="PublishedDateKey" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FactSales" Relationship="PUBDW.DimTitleFactSales" FromRole="DimTitle" ToRole="FactSales" />
+          <NavigationProperty Name="DimPublisher" Relationship="PUBDW.DimPublisherDimTitle" FromRole="DimTitle" ToRole="DimPublisher" />
+          <Property Name="PublisherKey" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FactTitlesAuthor" Relationship="PUBDW.DimTitleFactTitlesAuthor" FromRole="DimTitle" ToRole="FactTitlesAuthor" />
+        </EntityType>
+        <EntityType Name="DimDate">
+          <Key>
+            <PropertyRef Name="DateKey" />
+          </Key>
+          <Property Name="DateKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Date" Type="DateTime" Nullable="false" />
+          <Property Name="DateName" Type="String" Nullable="false" MaxLength="50" Unicode="true" />
+          <Property Name="Month" Type="Int16" Nullable="false" />
+          <Property Name="MonthName" Type="String" Nullable="false" MaxLength="50" Unicode="true" />
+          <Property Name="Quarter" Type="Int16" Nullable="false" />
+          <Property Name="QuarterName" Type="String" Nullable="false" MaxLength="50" Unicode="true" />
+          <Property Name="Year" Type="Int16" Nullable="false" />
+          <Property Name="YearName" Type="String" Nullable="false" Unicode="true" MaxLength="50" />
+          <NavigationProperty Name="DimTitle" Relationship="PUBDW.DimDateDimTitle" FromRole="DimDate" ToRole="DimTitle" />
+          <NavigationProperty Name="FactSales" Relationship="PUBDW.DimDateFactSales" FromRole="DimDate" ToRole="FactSales" />
+        </EntityType>
+        <Association Name="DimDateDimTitle">
+          <End Type="PUBDW.DimDate" Role="DimDate" Multiplicity="1" />
+          <End Type="PUBDW.DimTitle" Role="DimTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimDate">
+              <PropertyRef Name="DateKey" />
+            </Principal>
+            <Dependent Role="DimTitle">
+              <PropertyRef Name="PublishedDateKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="FactSales">
+          <Key>
+            <PropertyRef Name="OrderNumber" />
+          </Key>
+          <Property Name="OrderNumber" Type="String" Nullable="false" MaxLength="50" Unicode="true" />
+          <NavigationProperty Name="DimDate" Relationship="PUBDW.DimDateFactSales" FromRole="FactSales" ToRole="DimDate" />
+          <Property Name="OrderDateKey" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DimTitle" Relationship="PUBDW.DimTitleFactSales" FromRole="FactSales" ToRole="DimTitle" />
+          <Property Name="TitleKey" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DimStore" Relationship="PUBDW.DimStoreFactSales" FromRole="FactSales" ToRole="DimStore" />
+          <Property Name="StoreKey" Type="Int32" Nullable="false" />
+          <Property Name="SalesQuantity" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="DimDateFactSales">
+          <End Type="PUBDW.DimDate" Role="DimDate" Multiplicity="1" />
+          <End Type="PUBDW.FactSales" Role="FactSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimDate">
+              <PropertyRef Name="DateKey" />
+            </Principal>
+            <Dependent Role="FactSales">
+              <PropertyRef Name="OrderDateKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DimTitleFactSales">
+          <End Type="PUBDW.DimTitle" Role="DimTitle" Multiplicity="1" />
+          <End Type="PUBDW.FactSales" Role="FactSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimTitle">
+              <PropertyRef Name="TitleKey" />
+            </Principal>
+            <Dependent Role="FactSales">
+              <PropertyRef Name="TitleKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DimStoreFactSales">
+          <End Type="PUBDW.DimStore" Role="DimStore" Multiplicity="1" />
+          <End Type="PUBDW.FactSales" Role="FactSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimStore">
+              <PropertyRef Name="StoreKey" />
+            </Principal>
+            <Dependent Role="FactSales">
+              <PropertyRef Name="StoreKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DimPublisher">
+          <Key>
+            <PropertyRef Name="PublisherKey" />
+          </Key>
+          <Property Name="PublisherKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PublisherId" Type="String" Nullable="false" Unicode="true" MaxLength="4" />
+          <Property Name="PublisherName" Type="String" Nullable="false" Unicode="true" MaxLength="50" />
+          <NavigationProperty Name="DimTitle" Relationship="PUBDW.DimPublisherDimTitle" FromRole="DimPublisher" ToRole="DimTitle" />
+        </EntityType>
+        <EntityType Name="DimAuthor">
+          <Key>
+            <PropertyRef Name="AuthorKey" />
+          </Key>
+          <Property Name="AuthorKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AuthorId" Type="String" Nullable="false" Unicode="true" MaxLength="11" />
+          <Property Name="AuthorName" Type="String" Nullable="false" Unicode="true" MaxLength="100" />
+          <Property Name="AuthorState" Type="String" Nullable="false" Unicode="true" MaxLength="2" />
+          <NavigationProperty Name="FactTitlesAuthor" Relationship="PUBDW.DimAuthorFactTitlesAuthor" FromRole="DimAuthor" ToRole="FactTitlesAuthor" />
+        </EntityType>
+        <EntityType Name="FactTitlesAuthor">
+          <Key>
+            <PropertyRef Name="FactTitlesAuthorsKey" />
+          </Key>
+          <Property Name="FactTitlesAuthorsKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="DimTitle" Relationship="PUBDW.DimTitleFactTitlesAuthor" FromRole="FactTitlesAuthor" ToRole="DimTitle" />
+          <Property Name="TitleKey" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DimAuthor" Relationship="PUBDW.DimAuthorFactTitlesAuthor" FromRole="FactTitlesAuthor" ToRole="DimAuthor" />
+          <Property Name="AuthorOrder" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="DimPublisherDimTitle">
+          <End Type="PUBDW.DimPublisher" Role="DimPublisher" Multiplicity="1" />
+          <End Type="PUBDW.DimTitle" Role="DimTitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimPublisher">
+              <PropertyRef Name="PublisherKey" />
+            </Principal>
+            <Dependent Role="DimTitle">
+              <PropertyRef Name="PublisherKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DimTitleFactTitlesAuthor">
+          <End Type="PUBDW.DimTitle" Role="DimTitle" Multiplicity="1" />
+          <End Type="PUBDW.FactTitlesAuthor" Role="FactTitlesAuthor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimTitle">
+              <PropertyRef Name="TitleKey" />
+            </Principal>
+            <Dependent Role="FactTitlesAuthor">
+              <PropertyRef Name="TitleKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DimAuthorFactTitlesAuthor">
+          <End Type="PUBDW.DimAuthor" Role="DimAuthor" Multiplicity="1" />
+          <End Type="PUBDW.FactTitlesAuthor" Role="FactTitlesAuthor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimAuthor">
+              <PropertyRef Name="AuthorKey" />
+            </Principal>
+            <Dependent Role="FactTitlesAuthor">
+              <PropertyRef Name="AuthorOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PUBDWStoreContainer" CdmEntityContainer="PUBDWContainer">
+    <EntitySetMapping Name="DimStores">
+      <EntityTypeMapping TypeName="IsTypeOf(PUBDW.DimStore)">
+        <MappingFragment StoreEntitySet="DimStores">
+          <ScalarProperty Name="StoreKey" ColumnName="StoreKey" />
+          <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+          <ScalarProperty Name="StoreName" ColumnName="StoreName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DimTitles">
+      <EntityTypeMapping TypeName="IsTypeOf(PUBDW.DimTitle)">
+        <MappingFragment StoreEntitySet="DimTitles">
+          <ScalarProperty Name="TitleKey" ColumnName="TitleKey" />
+          <ScalarProperty Name="TitleId" ColumnName="TitleId" />
+          <ScalarProperty Name="TitleName" ColumnName="TitleName" />
+          <ScalarProperty Name="TitleType" ColumnName="TitleType" />
+          <ScalarProperty Name="TitlePrice" ColumnName="TitlePrice" />
+          <ScalarProperty Name="PublishedDateKey" ColumnName="PublishedDateKey" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DimDates">
+      <EntityTypeMapping TypeName="IsTypeOf(PUBDW.DimDate)">
+        <MappingFragment StoreEntitySet="DimDates">
+          <ScalarProperty Name="DateKey" ColumnName="DateKey" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="DateName" ColumnName="DateName" />
+          <ScalarProperty Name="Month" ColumnName="Month" />
+          <ScalarProperty Name="MonthName" ColumnName="MonthName" />
+          <ScalarProperty Name="Quarter" ColumnName="Quarter" />
+          <ScalarProperty Name="QuarterName" ColumnName="QuarterName" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="YearName" ColumnName="YearName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FactSale">
+      <EntityTypeMapping TypeName="IsTypeOf(PUBDW.FactSales)">
+        <MappingFragment StoreEntitySet="FactSale">
+          <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+          <ScalarProperty Name="OrderDateKey" ColumnName="OrderDateKey" />
+          <ScalarProperty Name="TitleKey" ColumnName="TitleKey" />
+          <ScalarProperty Name="StoreKey" ColumnName="StoreKey" />
+          <ScalarProperty Name="SalesQuantity" ColumnName="SalesQuantity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

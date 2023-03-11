@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="89ad41e5d1884befb25bca01218fa798" Name="Diagram1" >
+        <EntityTypeShape EntityType="PUBDW.DimStore" Width="1.5" PointX="3.75" PointY="4.375" />
+        <EntityTypeShape EntityType="PUBDW.DimTitle" Width="1.5" PointX="1.75" PointY="1.25" />
+        <EntityTypeShape EntityType="PUBDW.DimDate" Width="1.5" PointX="5.75" PointY="0.875" />
+        <AssociationConnector Association="PUBDW.DimDateDimTitle" />
+        <EntityTypeShape EntityType="PUBDW.FactSales" Width="1.5" PointX="7.875" PointY="1.25" />
+        <AssociationConnector Association="PUBDW.DimDateFactSales" />
+        <AssociationConnector Association="PUBDW.DimTitleFactSales" />
+        <AssociationConnector Association="PUBDW.DimStoreFactSales" />
+        <EntityTypeShape EntityType="PUBDW.DimPublisher" Width="1.5" PointX="10.625" PointY="2.25" />
+        <EntityTypeShape EntityType="PUBDW.DimAuthor" Width="1.5" PointX="10.875" PointY="4.75" />
+        <EntityTypeShape EntityType="PUBDW.FactTitlesAuthor" Width="1.5" PointX="13.625" PointY="1.125" />
+        <AssociationConnector Association="PUBDW.DimPublisherDimTitle" />
+        <AssociationConnector Association="PUBDW.DimTitleFactTitlesAuthor" />
+        <AssociationConnector Association="PUBDW.DimAuthorFactTitlesAuthor" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
